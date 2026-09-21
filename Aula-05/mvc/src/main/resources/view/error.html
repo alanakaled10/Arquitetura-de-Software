@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <title>Erro</title>
+</head>
+<body>
+  <header>
+    <h1>Eita... Ocorreu um erro</h1>
+  </header>
+  <main>
+    <p th:text="${mensagem}"></p>
+  </main>
+  <footer>
+    Porjeto de compreensão do padrão MVC
+  </footer>
+</body>
+</html>
