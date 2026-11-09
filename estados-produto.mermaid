@@ -1,0 +1,15 @@
+stateDiagram-v2
+    [*] --> INDISPONIVEL : criar() / estoque = 0
+
+    INDISPONIVEL --> DISPONIVEL : entradaEstoque() [estoque > 0]
+    DISPONIVEL --> INDISPONIVEL : saidaEstoque() [estoque == 0]
+
+    INDISPONIVEL --> DESCONTINUADO : descontinuar() [perfil == ADM]
+    DISPONIVEL --> DESCONTINUADO : descontinuar() [perfil == ADM]
+
+    DESCONTINUADO --> [*]
+
+    note right of DESCONTINUADO
+        Não aceita entrada nem saída de estoque.
+        Somente o administrador descontinua.
+    end note
