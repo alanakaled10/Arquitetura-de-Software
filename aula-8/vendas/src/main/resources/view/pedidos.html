@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos</title>
+</head>
+<body>
+  <div th:replace="~{fragments/layout :: topo('/pedidos')}"></div>
+  <h1>Pedidos</h1>
+
+  <h2>Fechar pedido</h2>
+  <form th:if="${not #lists.isEmpty(disponiveis)}" th:action="@{/pedidos}" method="post">
+    <label>Produto:
+      <select name="productId" required>
+        <option th:each="p : ${disponiveis}" th:value="${p.id}"
+                th:text="${p.name + ' (' + p.stock + ' em estoque)'}"></option>
+      </select>
+    </label>
+    <label>Quantidade:
+      <input type="number" name="quantidade" min="1" value="1" required style="width: 5em">
+    </label>
+    <button type="submit">Fechar pedido</button>
+  </form>
+  <p th:if="${#lists.isEmpty(disponiveis)}">Nenhum produto disponível. Dê entrada no estoque primeiro.</p>
+
+  <h2>Pedidos fechados</h2>
+  <table border="1" cellpadding="6">
+    <thead>
+      <tr><th>ID</th><th>Produto</th><th>Qtd.</th><th>Valor</th><th>Status</th><th>ID da fatura</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      <tr th:each="p : ${pedidos}">
+        <td th:text="${p.id}"></td>
+        <td th:text="${p.product.name}"></td>
+        <td th:text="${p.quantidade}"></td>
+        <td th:text="${#numbers.formatDecimal(p.valor, 1, 'POINT', 2, 'COMMA')}"></td>
+        <td>
+          <span th:text="${p.status.descricao}"></span>
+          <br th:if="${p.erroFaturamento}">
+          <small th:if="${p.erroFaturamento}" th:text="${p.erroFaturamento}" style="color: crimson"></small>
+        </td>
+        <td th:text="${p.faturaId}"></td>
+        <td>
+          <form th:if="${p.status.name() == 'FALHA_FATURAMENTO'}"
+                th:action="@{/pedidos/{id}/refaturar(id=${p.id})}" method="post">
+            <button type="submit">Tentar faturar novamente</button>
+          </form>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(pedidos)}"><td colspan="7">Nenhum pedido fechado.</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>
